@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +11,6 @@
             text-align: center;
             padding: 50px;
         }
-
         .container {
             background: white;
             padding: 20px;
@@ -20,14 +18,11 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: inline-block;
         }
-
-        select,
-        button {
+        select, button {
             padding: 10px;
             margin: 10px;
             font-size: 16px;
         }
-
         button {
             background-color: #007bff;
             color: white;
@@ -37,7 +32,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h2>Select Environment</h2>
@@ -45,21 +39,31 @@
             <option value="AV">AV</option>
             <option value="FRV">FRV</option>
         </select>
-        <button onclick="openAndFill()">Open</button>
+ 
+        <h2>Select Description</h2>
+        <select id="descSelect">
+            <option value="LeitungsKey">LeitungsKey</option>
+            <option value="CancelProductOrder">CancelProductOrder</option>
+            <option value="CancelReservation">CancelReservation</option>
+        </select>
+ 
+        <button id="openPage">Open</button>
     </div>
-
+ 
     <script>
-        function openAndFill() {
-            const env = document.getElementById("envSelect").value;
-            const urls = {
-                "AV": "http://edezzg.de.t-internal.com:15506/wrapperTest/",
-                "FRV": "http://edezzg.de.t-internal.com:15509/wrapperTest/"
-            };
-            // 1. Open the target page first
-            const newTab = window.open(urls[env], "_blank");
-        }
-
+        document.getElementById("openPage").addEventListener("click", () => {
+            const selectedEnv = document.getElementById("envSelect").value;
+            const selectedDesc = document.getElementById("descSelect").value;
+ 
+chrome.storage.local.set({ selectedEnv, selectedDesc }, () => {
+                const urls = {
+"AV": "http://edezzg.de.t-internal.com:15506/wrapperTest/",
+"FRV": "http://edezzg.de.t-internal.com:15509/wrapperTest/"
+};
+ 
+window.open(urls[selectedEnv], "_blank");
+            });
+        });
     </script>
 </body>
-
 </html>
