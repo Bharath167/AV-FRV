@@ -55,37 +55,10 @@
                 "AV": "http://edezzg.de.t-internal.com:15506/wrapperTest/",
                 "FRV": "http://edezzg.de.t-internal.com:15509/wrapperTest/"
             };
-            const data = {
-                "AV": {
-                    title: "AV Title",
-                    description: "AV Description"
-                },
-                "FRV": {
-                    title: "FRV Title",
-                    description: "FRV Description"
-                }
-            };
-
             // 1. Open the target page first
             const newTab = window.open(urls[env], "_blank");
-
-            // 2. After delay, try to fill the form
-            setTimeout(() => {
-                try {
-                    // Build the injection script
-                    const scriptContent = `
-                        document.querySelector("input[name='descriptor']").value = ${JSON.stringify(data[env].title)};
-                        document.querySelector("textarea[name='inputMessage']").value = ${JSON.stringify(data[env].description)};
-                    `;
-
-                    // Inject directly into the new tab
-                    newTab.eval(scriptContent);
-                } catch (e) {
-                    console.error("Injection failed:", e);
-                    alert("Please allow popups and try again!");
-                }
-            }, 3000); // 3-second delay for page load
         }
+
     </script>
 </body>
 
