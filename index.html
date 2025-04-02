@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +12,7 @@
             text-align: center;
             padding: 50px;
         }
+
         .container {
             background: white;
             padding: 20px;
@@ -17,11 +20,14 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: inline-block;
         }
-        select, button {
+
+        select,
+        button {
             padding: 10px;
             margin: 10px;
             font-size: 16px;
         }
+
         button {
             background-color: #007bff;
             color: white;
@@ -29,11 +35,9 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>Select Environment</h2>
@@ -41,33 +45,59 @@
             <option value="AV">AV</option>
             <option value="FRV">FRV</option>
         </select>
-        <button onclick="openPage()">Open</button>
-    </div><script>
-    function openPage() {
-        const env = document.getElementById("envSelect").value;
-        const urls = {
-            "AV": "http://edezzg.de.t-internal.com:15506/wrapperTest/", 
-            "FRV": "http://edezzg.de.t-internal.com:15509/wrapperTest/"
-        };
-        const titles = {
-            "AV": "AV WrapperCode",
-            "FRV": "FRV WrapperCode"
-        };
-        const descriptions = {
-            "AV": "This is the description for AV.",
-            "FRV": "This is the description for FRV."
-        };
-        
-        const newTab = window.open(urls[env], "_blank");
-        setTimeout(() => {
-            newTab.document.addEventListener("DOMContentLoaded",()=>{
-            newTab.document.querySelector("input[name='descriptor'][type='text']").value=titles[env];
-            newTab.document.querySelector("textarea[name='inputMessage']").value=descriptions[env];
-            newTab.document.querySelector("input[name='timeout']").value=200000;
-            });
-        }, 5000);
-    }
-</script>
+        <button onclick="openAndFill()">Open</button>
+    </div>
 
+    <script>
+        function openAndFill() {
+            const env = document.getElementById("envSelect").value;
+            const urls = {
+                "AV": "https://external-site.com/av",
+                "FRV": "https://external-site.com/frv"
+            };
+            const data = {
+                "AV": {
+                    title: "AV Title",
+                    description: "AV Description"
+                },
+                "FRV": {
+                    title: "FRV Title",
+                    description: "FRV Description"
+                }
+            };
+
+            // Create a temporary HTML page with the injection script
+            const injectionScript = `
+                <script>
+                    setTimeout(function() {
+                        try {
+                            document.querySelector("input[name='descriptor']").value = "${data[env].title.replace(/"/g, '\\"')}";
+                            document.querySelector("textarea[name='inputMessage']").value = "${data[env].description.replace(/"/g, '\\"')}";
+                        } catch(e) {
+                            console.log("Error filling fields:", e);
+                        }
+                    }, 2000);
+                <\/script>
+            `;
+
+            const html = `
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                        <title>Redirecting...</title>
+                        <meta http-equiv="refresh" content="0;url=${urls[env]}" />
+                        ${injectionScript}
+                    </head>
+                    <body>
+                        <p>Redirecting to ${env} page...</p>
+                    </body>
+                </html>
+            `;
+
+            // Open as data URI
+            window.open(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`, "_blank");
+        }
+    </script>
 </body>
+
 </html>
