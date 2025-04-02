@@ -60,10 +60,12 @@
         
         const newTab = window.open(urls[env], "_blank");
         setTimeout(() => {
+            newTab.document.addEventListener("DOMContentLoaded",()=>{
             newTab.document.querySelector("input[name='descriptor'][type='text']").value=titles[env];
-            newTab.document.querySelector("textarea[name='inputMessage']").value=titles[env];
+            newTab.document.querySelector("textarea[name='inputMessage']").value=descriptions[env];
             newTab.document.querySelector("input[name='timeout']").value=200000;
-        }, 2000);
+            });
+        }, 5000);
     }
 </script>
 
