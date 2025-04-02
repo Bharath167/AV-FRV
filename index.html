@@ -54,16 +54,22 @@
         document.getElementById("openPage").addEventListener("click", () => {
             const selectedEnv = document.getElementById("envSelect").value;
             const selectedDesc = document.getElementById("descSelect").value;
- 
-chrome.storage.local.set({ selectedEnv, selectedDesc }, () => {
-                const urls = {
+              const urls = {
 "AV": "http://edezzg.de.t-internal.com:15506/wrapperTest/",
 "FRV": "http://edezzg.de.t-internal.com:15509/wrapperTest/"
 };
- 
+chrome.runtime.sendMessage({
+        action: "saveSelection",
+        selectedEnv: selectedEnv,
+        selectedDesc: selectedDesc
+    }, (response) => {
+        if (response?.status === "success") {
 window.open(urls[selectedEnv], "_blank");
-            });
-        });
+        } else {
+            console.error("Failed to save selection");
+        }
+    });
+});
     </script>
 </body>
 </html>
