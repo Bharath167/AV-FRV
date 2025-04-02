@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AV/FRV AutoFill Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+        }
+        select, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Select Environment</h2>
+        <select id="envSelect">
+            <option value="AV">AV</option>
+            <option value="FRV">FRV</option>
+        </select>
+        <button onclick="openPage()">Open</button>
+    </div><script>
+    function openPage() {
+        const env = document.getElementById("envSelect").value;
+        const urls = {
+            "AV": "http://edezzg.de.t-internal.com:15506/wrapperTest/", 
+            "FRV": "http://edezzg.de.t-internal.com:15509/wrapperTest/"
+        };
+        const titles = {
+            "AV": "AV WrapperCode",
+            "FRV": "FRV WrapperCode"
+        };
+        const descriptions = {
+            "AV": "This is the description for AV.",
+            "FRV": "This is the description for FRV."
+        };
+        
+        const newTab = window.open(urls[env], "_blank");
+        setTimeout(() => {
+            newTab.document.querySelector("input[name='descriptor'][type='text']").value=titles[env];
+            newTab.document.querySelector("textarea[name='inputMessage']").value=titles[env];
+            newTab.document.querySelector("input[name='timeout']").value=200000;
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
