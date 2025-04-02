@@ -66,36 +66,25 @@
                 }
             };
 
-            // Create a temporary HTML page with the injection script
-            const injectionScript = `
-                <script>
-                    setTimeout(function() {
-                        try {
-                            document.querySelector("input[name='descriptor']").value = "${data[env].title.replace(/"/g, '\\"')}";
-                            document.querySelector("textarea[name='inputMessage']").value = "${data[env].description.replace(/"/g, '\\"')}";
-                        } catch(e) {
-                            console.log("Error filling fields:", e);
-                        }
-                    }, 2000);
-                <\/script>
-            `;
+            // 1. Open the target page first
+            const newTab = window.open(urls[env], "_blank");
 
-            const html = `
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Redirecting...</title>
-                        <meta http-equiv="refresh" content="0;url=${urls[env]}" />
-                        ${injectionScript}
-                    </head>
-                    <body>
-                        <p>Redirecting to ${env} page...</p>
-                    </body>
-                </html>
-            `;
+            // 2. After delay, try to fill the form
+            setTimeout(() => {
+                try {
+                    // Build the injection script
+                    const scriptContent = `
+                        document.querySelector("input[name='descriptor']").value = ${JSON.stringify(data[env].title)};
+                        document.querySelector("textarea[name='inputMessage']").value = ${JSON.stringify(data[env].description)};
+                    `;
 
-            // Open as data URI
-            window.open(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`, "_blank");
+                    // Inject directly into the new tab
+                    newTab.eval(scriptContent);
+                } catch (e) {
+                    console.error("Injection failed:", e);
+                    alert("Please allow popups and try again!");
+                }
+            }, 3000); // 3-second delay for page load
         }
     </script>
 </body>
